@@ -1,0 +1,82 @@
+= arguments
+
+Keyword arguments support now!
+
+== DESCRIPTION:
+
+You don't have to wait until Ruby 2.0 to get (named|keyword) arguments support.
+Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually with work JRuby
+
+== SYNOPSIS:
+
+    require 'arguments'
+
+    class Example
+      def meth(a = :a, b = :b, c = :c)
+        [a,b,c]
+      end
+
+      named_args_for :meth
+
+      class << self
+        def class_method(a = :a, b = :b, c = :c)
+          [a,b,c]
+        end
+        named_args_for :class_method
+      end
+    end
+    
+    nu = Example.new
+    nu.meth #=> [:a,:b,:c]
+    nu.meth(1, :c => Class) #=> [1,:b,Class]
+    nu.meth(:b => nil, :a => 'something') #=> ['something', nil, :c]
+    
+    Example.meth(:b => nil, :a => 'something') #=> ['something', nil, :c]
+    
+== LIMITATIONS
+
+* Performance penalty occurs only in 1.8.6 due to ParseTree use and only while calling Class#named_args\_for,
+penalty while calling the actuall method is neglectable.
+* With Ruby 1.8.6 it can patch methods declared with eval, with 1.9.1 only methods declared in a source file.
+* If last argument is a Hash is taken as an options Hash and not assigned to the argument varible, if you want to pass a has as a last
+argument use keywords.
+
+== TODO
+
+Don't use last argument (Hash) as options if passed total number of args.
+
+== REQUIREMENTS:
+
+Ruby 1.8.6:
+
+- ParseTree >= 3.0.3
+- Ruby2Ruby 1.1.9
+
+== INSTALL:
+
+sudo gem install maca-arguments
+
+== LICENSE:
+
+(The MIT License)
+
+Copyright (c) 2009 Macario Ortega
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

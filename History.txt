@@ -1,0 +1,5 @@
+== 0.4 2009-06-30
+
+* 1 major enhancement:
+  * Initial release
+  * Works with Ruby 1.8.6 and 1.9.1
