@@ -43,7 +43,7 @@ describe Arguments do
   
   it "should allow overriding with nil" do
     Klass.send( :named_arguments_for, :two )
-    @instance.two(1, :three => nil).should == [1, 2, nil]
+    @instance.two( 1, :three => nil ).should == [1, 2, nil]
   end
   
   it "should pass block" do
