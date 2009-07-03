@@ -19,9 +19,9 @@ class Class
         end
       end
 
-      self.module_eval <<-RUBY_EVAL
+      self.module_eval <<-RUBY_EVAL, __FILE__, __LINE__
         def __new_#{ method } *args, &block
-          opts = args.pop if args.last.kind_of? Hash
+          opts = args.last.kind_of?( Hash ) ? args.pop : {}
           #{ assigns.join("\n") }
           __original_#{ method } #{ names.collect{ |n| n.first }.join(', ') }, &block
         end
