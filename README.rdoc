@@ -52,7 +52,7 @@ Ruby 1.8.6:
 
 == INSTALL:
 
-sudo gem install maca-arguments –source http://gems.github.com
+    sudo gem install maca-arguments –source http://gems.github.com
 
 == LICENSE:
 
