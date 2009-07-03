@@ -37,8 +37,7 @@ Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will wor
 
 * Performance penalty occurs only in 1.8.6 due to ParseTree use and only while calling Class#named_args\_for, penalty while calling the actuall method is neglectable.
 * With Ruby 1.8.6 it can patch methods declared with eval, with 1.9.1 only methods declared in a source file.
-* If last argument is a Hash is taken as an options Hash and not assigned to the argument varible, if you want to pass a has as a last
-argument use keywords.
+* If last argument is a Hash is taken as an options Hash and not assigned to the argument varible, if you want to pass a has as a last argument use keywords.
 
 == TODO
 
@@ -53,7 +52,7 @@ Ruby 1.8.6:
 
 == INSTALL:
 
-sudo gem install maca-arguments
+sudo gem install maca-arguments –source http://gems.github.com
 
 == LICENSE:
 
