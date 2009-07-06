@@ -5,7 +5,7 @@ Keyword arguments support now!
 == DESCRIPTION:
 
 You don't have to wait until Ruby 2.0 to get (named|keyword) arguments support.
-Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will work with JRuby
+Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will work with JRuby (if someone is interested in contributing, I guess is possible since merb-action-args works with JRuby)
 
 == SYNOPSIS:
 
@@ -31,7 +31,7 @@ Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will wor
     nu.meth(1, :c => Class) #=> [1,:b,Class]
     nu.meth(:b => nil, :a => 'something') #=> ['something', nil, :c]
     
-    Example.meth(:b => nil, :a => 'something') #=> ['something', nil, :c]
+    Example.class_method(:b => nil, :a => 'something') #=> ['something', nil, :c]
     
 == LIMITATIONS
 
