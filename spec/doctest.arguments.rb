@@ -1,5 +1,6 @@
 require File.dirname(__FILE__) + '/../lib/arguments.rb'
 require 'pp'
+require 'remembered_evals' # my own
 
 =begin
 doctest: works as advertised
@@ -11,7 +12,7 @@ doctest: works as advertised
 => [4, 3, 34]
 >> go3 :a => 55
 => [55, 3, 34]
-doctest: raises requires requireds
+doctest: (raises) requires all requireds
 >> go3 :b => 55
 MalformedArguments: missing a (:a) (index 0) not enough required arguments in []
 	from ./enhanced_arg_parser.rb:148:in `interpret'
@@ -44,7 +45,7 @@ class A
 end
 
 =begin
-#doctest :works within a class def
+doctest: works within a class def
 >> a = A.new
 >> a.go 3, 4, 5
 => [3, 4, 5]
@@ -136,12 +137,6 @@ end
 # ABadErrorMessage:
 
 # doctest: works with class methods, too
-class A
- @@about = 'about'
- def A.go(b = @@about)
-   b
- end
-end
 # >> A.go
 # => "about"
 # >> class A; class << self; named_args_for :go; end; end
@@ -151,3 +146,10 @@ end
 # => 2
 # >> A.go :b => 3
 # => 3
+class A
+ @@about = 'about'
+ def A.go(b = @@about)
+   b
+ end
+end
+
