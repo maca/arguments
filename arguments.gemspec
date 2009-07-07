@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<ParseTree>, [">= 3.0.3"])
       s.add_runtime_dependency(%q<ruby2ruby>, ["= 1.1.9"])
       s.add_development_dependency(%q<newgem>, [">= 1.4.1"])
+      s.add_development_dependency(%q<rspec>, [">= 1.2.7"])
       s.add_development_dependency(%q<hoe>, [">= 1.8.0"])
     else
       s.add_dependency(%q<ParseTree>, [">= 3.0.3"])
