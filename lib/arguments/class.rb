@@ -7,8 +7,10 @@ class Class
       
       names.each_with_index do |name, index|
         unless name.size == 1
-          assigns << "#{ name.first } = opts.key?(:#{ name.first }) ? opts[:#{ name.first }] : #{ name.last }"
+          # optionals
+          assigns << "#{ name.first } = opts.key?(:#{ name.first }) ? opts[:#{ name.first }] : args.fetch(#{ index },#{ name.last })"
         else
+          # requireds
           assigns << <<-RUBY_EVAL 
             begin
               #{ name.first } = opts.key?(:#{ name.first }) ? opts[:#{ name.first }] : args.fetch(#{ index })
@@ -31,5 +33,6 @@ class Class
       RUBY_EVAL
     end
   end
+  alias :named_args_for :named_arguments_for
   
 end
