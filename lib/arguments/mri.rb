@@ -8,7 +8,12 @@ require 'ruby2ruby'
 module Arguments
   def self.names klass, method
     args = ParseTree.translate( klass, method ).assoc(:scope).assoc(:block).assoc(:args)[1..-1]
-    vals = args.pop[1..-1]
+    if args.last.instance_of? Array
+      vals = args.pop[1..-1]
+    else
+      # if it has no optionals
+      vals = []
+    end
 
     args.collect do |arg|
       if val = vals.find{ |v| v[1] == arg }

@@ -87,6 +87,7 @@ ItRaisesOnMe:...
 doctest: it works with all unnamed
 >> def go5(a, b); [a, b]; end
 >> Object.class_eval "named_args_for :go5"
+>> puts 'here1'
 >> go5(1, 2)
 => [1, 2]
 >> go5(1, :b => 3)
@@ -139,7 +140,6 @@ end
 # doctest: works with class methods, too
 # >> A.go
 # => "about"
-# >> class A; class << self; named_args_for :go; end; end
 # >> A.go
 # => "about"
 # >> A.go 2
@@ -148,8 +148,12 @@ end
 # => 3
 class A
  @@about = 'about'
+ class << self
  def A.go(b = @@about)
    b
  end
+ named_args_for :go
+ end
+   
 end
 

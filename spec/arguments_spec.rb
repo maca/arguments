@@ -55,7 +55,14 @@ describe Arguments do
     Klass.send( :named_arguments_for, :asr )
     @instance.asr(0, 1, 2, :curve => 3).should == [0,1,2,3]
   end
-  
+
+  it "should work with methods that have no optionals" do
+    Klass.send( :named_arguments_for, :go5 )
+    @instance.go5(1, 2).should == [1,2]
+    @instance.go5(1, :b => 3).should == [1,3]
+    @instance.go5(:a => 4, :b => 5).should == [4, 5]
+  end
+ 
   it "should work with class methods" do
     Klass.asr(0, 1, 2, :curve => 3).should == [0,1,2,3]
   end
