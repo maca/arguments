@@ -7,7 +7,14 @@ class Class
       
       names.each_with_index do |name, index|
         unless name.size == 1
-          assigns << "#{ name.first } = opts.key?(:#{ name.first }) ? opts[:#{ name.first }] : #{ name.last }"
+          assigns << <<-RUBY_EVAL
+            #{ name.first } =
+            if opts.key?(:#{ name.first })
+              opts[:#{ name.first }]
+            else
+              args.size >= #{ index + 1 } ? args[#{ index }] : #{ name.last }
+            end
+          RUBY_EVAL
         else
           assigns << <<-RUBY_EVAL 
             begin

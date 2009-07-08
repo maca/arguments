@@ -4,6 +4,10 @@
   * Initial release
   * Works with Ruby 1.8.6 and 1.9.1
 
-== 0.4.2 2009-07-3
+== 0.4.2 2009-07-03
 
 * Fixed a Bug where not passing arguments would rise try to call #key? on nil
+
+== 0.4.3 2009-07-07
+
+* Fixed a serious Bug where default values could not be overriden by passing arguments without keyword

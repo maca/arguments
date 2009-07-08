@@ -33,6 +33,11 @@ Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will wor
     
     Example.class_method(:b => nil, :a => 'something') #=> ['something', nil, :c]
     
+
+Note: Keyword argument take precedence over argument order:
+
+    nu.meth(10, :a => -10) #=> [-10, :b, :c]
+
 == LIMITATIONS
 
 * Performance penalty occurs only in 1.8.6 due to ParseTree use and only while calling Class#named_args\_for, penalty while calling the actuall method is neglectable.
