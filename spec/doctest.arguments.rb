@@ -1,10 +1,16 @@
+# to run: gem install rubydoctest && rubydoctest doctest.arguments.rb
+
 require File.dirname(__FILE__) + '/../lib/arguments.rb'
-require 'pp'
-require 'remembered_evals' # my own
+if RUBY_VERSION >= '1.9'
+  # 1.9 needs this since it uses evals for all defines within this document, and otherwise we'd lose their code
+  require 'remembered_evals' # gem install rogerdpack-remembered_evals
+end
 
 =begin
 doctest: works as advertised
->> def go3(a, b = 3, c = 34); [a, b, c]; end
+>> def go3(a, b = 3, c = 34); 
+    [a, b, c]; 
+    end
 >> Object.class_eval "named_args_for :go3"
 >> go3 3
 => [3, 3, 34]
@@ -87,7 +93,6 @@ ItRaisesOnMe:...
 doctest: it works with all unnamed
 >> def go5(a, b); [a, b]; end
 >> Object.class_eval "named_args_for :go5"
->> puts 'here1'
 >> go5(1, 2)
 => [1, 2]
 >> go5(1, :b => 3)
