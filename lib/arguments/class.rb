@@ -9,6 +9,14 @@ class Class
         unless name.size == 1
           # optionals
           assigns << "#{ name.first } = opts.key?(:#{ name.first }) ? opts[:#{ name.first }] : args.fetch(#{ index },#{ name.last })"
+          assigns << <<-RUBY_EVAL
+            #{ name.first } =
+            if opts.key?(:#{ name.first })
+              opts[:#{ name.first }]
+            else
+              args.size >= #{ index + 1 } ? args[#{ index }] : #{ name.last }
+            end
+          RUBY_EVAL
         else
           # requireds
           assigns << <<-RUBY_EVAL 

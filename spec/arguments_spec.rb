@@ -51,6 +51,15 @@ describe Arguments do
     @instance.with_block( 1, :three => nil, :two => 'something' ){ :block }.should == [1, 'something', nil, :block]
   end
   
+  it "should override defaults on standard passing" do
+    Klass.send( :named_arguments_for, :asr )
+    @instance.asr(0, 1, 2, :curve => 3).should == [0,1,2,3]
+  end
+  
+  it "should work with class methods" do
+    Klass.asr(0, 1, 2, :curve => 3).should == [0,1,2,3]
+  end
+  
   it "should benchmark without hack" do
     puts Benchmark.measure {
       1_000.times do
