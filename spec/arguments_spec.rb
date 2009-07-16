@@ -75,6 +75,10 @@ describe Arguments do
     }
   end
   
+  it "should raise if you try to call it on a c (binary) method" do
+    lambda  { class String; named_arguments_for(:strip); end }.should raise_error( BinaryMethodError )
+  end
+
   it "should benchmark with hack" do
     puts Benchmark.measure {
       Klass.send( :named_arguments_for, :with_block )

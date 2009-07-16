@@ -1,8 +1,12 @@
+# used to throw if you try to call it on a binary method
+class BinaryMethodError < Exception; end
+
 class Class
   
   def named_arguments_for *methods
     methods.each do |method|
       names   = Arguments.names self, method
+      raise BinaryMethodError.new("tried to call it on a Binary Method" + method.to_s) unless names
       assigns = []
       
       names.each_with_index do |name, index|
