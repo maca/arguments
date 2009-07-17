@@ -75,6 +75,10 @@ describe Arguments do
     }
   end
   
+  it "should work with modules too" do
+    lambda { module TestMod; def go(a); end; named_arguments_for :go; end }
+  end
+
   it "should raise if you try to call it on a c (binary) method" do
     lambda  { class String; named_arguments_for(:strip); end }.should raise_error( BinaryMethodError )
   end

@@ -1,7 +1,7 @@
 # used to throw if you try to call it on a binary method
 class BinaryMethodError < Exception; end
 
-class Class
+module NamedArgs
   
   def named_arguments_for *methods
     methods.each do |method|
@@ -48,3 +48,15 @@ class Class
   alias :named_args_for :named_arguments_for
   
 end
+
+# for some reason in 1.9 module doesn't take methods from class...at least not like 1.8 did
+# so we have to mix them into both 
+class Class
+ include NamedArgs
+end
+
+class Module
+ include NamedArgs
+end
+
+
