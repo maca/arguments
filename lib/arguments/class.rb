@@ -6,7 +6,7 @@ module NamedArgs
   def named_arguments_for *methods
     methods.each do |method|
       names   = Arguments.names self, method
-      raise BinaryMethodError.new("tried to call it on a Binary Method" + method.to_s) unless names
+      raise BinaryMethodError.new("tried to call it on a Binary or non existent Method" + method.to_s) unless names
       assigns = []
       
       names.each_with_index do |name, index|
