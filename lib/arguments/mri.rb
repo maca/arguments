@@ -6,7 +6,9 @@ require 'ruby2ruby'
 
 module Arguments
   def self.names klass, method
-    args = ParseTree.translate( klass, method ).assoc(:scope).assoc(:block).assoc(:args)[1..-1]
+    args = ParseTree.translate( klass, method ).assoc(:scope).assoc(:block).assoc(:args)
+    args = args[1..-1]
+    return [] if args.empty? or args.last.is_a?(Symbol)
     vals = args.pop[1..-1]
 
     args.collect do |arg|
@@ -18,3 +20,4 @@ module Arguments
     end
   end
 end
+

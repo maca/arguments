@@ -60,6 +60,27 @@ describe Arguments do
     Klass.asr(0, 1, 2, :curve => 3).should == [0,1,2,3]
   end
   
+  it "should not patch methods that accept no args" do
+    # Arguments.should_not_receive(:names)
+    Klass.send( :named_arguments_for, :no_args )
+    lambda { @instance.no_args(1) }.should raise_error(ArgumentError)
+    @instance.no_args.should be_nil
+  end
+  
+  it "should not patch methods that use splatter op" do
+    Klass.send( :named_arguments_for, :splatted )
+    @instance.splatted(1, :args => 1).should == [1, {:args => 1}]
+  end
+  
+  it "should not patch methods with no optionals" do
+    Klass.send( :named_arguments_for, :no_opts )
+    @instance.no_opts(1,2, :a => 1).should == {:a => 1}
+  end
+  
+  it "should patch all methods" do
+    Klass.send( :named_args )
+  end
+  
   it "should benchmark without hack" do
     puts Benchmark.measure {
       1_000.times do

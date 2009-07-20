@@ -15,11 +15,22 @@ class Klass
     [attackTime, sustainLevel, releaseTime, curve]
   end
   
+  def no_args
+  end
+
+  def splatted *args
+    args
+  end
+  
+  def no_opts a, b, c
+    c
+  end
+  
   class << self
     def asr attackTime = 3, sustainLevel = 2, releaseTime = 1, curve = 0
       [attackTime, sustainLevel, releaseTime, curve]
     end
-  named_arguments_for :asr
+    named_arguments_for :asr
   end
   
   def == other
