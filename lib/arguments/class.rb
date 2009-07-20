@@ -3,9 +3,7 @@ class Class
     methods = instance_methods - Object.methods if methods.empty?
     
     methods.each do |meth|
-      unbound = instance_method meth
       names   = Arguments.names self, meth
-      
       next if names.empty? || names.inject(0){ |sum, pair| sum + pair.size } == names.size
       
       assigns = []

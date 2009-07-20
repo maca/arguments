@@ -7,5 +7,5 @@ require 'arguments/class'
 RUBY_VERSION.to_f >= 1.9 ? require( 'arguments/vm' ) : require( 'arguments/mri' )
 
 module Arguments
-  VERSION = '0.4.6'
+  VERSION = '0.4.7'
 end
