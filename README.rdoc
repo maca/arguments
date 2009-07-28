@@ -34,9 +34,16 @@ Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will wor
     Example.class_method(:b => nil, :a => 'something') #=> ['something', nil, :c]
     
 
-Note: Keyword argument take precedence over argument order:
 
-    nu.meth(10, :a => -10) #=> [-10, :b, :c]
+* #named_arguments_for is aliased as #named_args_for and #named_args
+* Calling #named_args_for without arguments patches all previously declared methods in scope
+* Any number of method names (Symbol or String) corresponding to existing methods can be passed
+* Methods with no optionals won't be patched (will behave as usual with no named params)
+* Same for methods with splatted arguments and for native methods (not declared in Ruby)
+* Keyword argument take precedence over argument order:
+      
+      nu.meth(10, :a => -10) #=> [-10, :b, :c]
+
 
 == LIMITATIONS
 

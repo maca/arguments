@@ -7,15 +7,13 @@ require 'ruby2ruby'
 
 module Arguments
   def self.names klass, method
-    begin 
-      args = ParseTree.translate( klass, method ).assoc(:scope).assoc(:block).assoc(:args)[1..-1]
-    rescue NoMethodError # binary method will fail on one of those assoc's
-      return nil
-    end
+    args = ParseTree.translate( klass, method ).assoc(:scope).assoc(:block).assoc(:args)
+    args = args[1..-1]
+    return [] if args.empty?
     if args.last.instance_of? Array
       vals = args.pop[1..-1]
     else
-      # if it has no optionals
+      # if it has no optionals then vals is empty
       vals = []
     end
 

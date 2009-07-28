@@ -1,14 +1,12 @@
-# used to throw if you try to call it on a binary method
-class BinaryMethodError < Exception; end
-
-module NamedArgs
-  
+class Class
   def named_arguments_for *methods
-    methods.each do |method|
-      names   = Arguments.names self, method
-      raise BinaryMethodError.new("tried to call it on a Binary or non existent Method" + method.to_s) unless names
-      assigns = []
+    methods = instance_methods - Object.methods if methods.empty?
+    
+    methods.each do |meth|
+      names   = Arguments.names self, meth
+      next if names.empty? || names.inject(0){ |sum, pair| sum + pair.size } == names.size
       
+      assigns = []
       names.each_with_index do |name, index|
         unless name.size == 1
           # optionals
@@ -34,21 +32,23 @@ module NamedArgs
       end
 
       self.module_eval <<-RUBY_EVAL, __FILE__, __LINE__
-        def __new_#{ method } *args, &block
+        def __new_#{ meth } *args, &block
           opts = args.last.kind_of?( Hash ) ? args.pop : {}
           #{ assigns.join("\n") }
-          __original_#{ method } #{ names.collect{ |n| n.first }.join(', ') }, &block
+          __original_#{ meth } #{ names.collect{ |n| n.first }.join(', ') }, &block
         end
         
-        alias __original_#{ method } #{ method }
-        alias #{ method } __new_#{ method }
+        alias __original_#{ meth } #{ meth }
+        alias #{ meth } __new_#{ meth }
       RUBY_EVAL
     end
   end
   alias :named_args_for :named_arguments_for
+  alias :named_args     :named_arguments_for
   
 end
 
+=begin
 # for some reason in 1.9 module doesn't take methods from class...at least not like 1.8 did
 # so we have to mix them into both 
 class Class
@@ -58,5 +58,4 @@ end
 class Module
  include NamedArgs
 end
-
-
+=end
