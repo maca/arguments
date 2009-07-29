@@ -26,7 +26,19 @@ class Klass
   def splatted *args
     args
   end
+
+  def splatted2 a=1, *args
+    args
+  end
+
+  def splatted3 a, *args
+    args
+  end
   
+  def splatted4 a, b=1, *args
+    args
+  end
+
   def no_opts a, b, c
     c
   end

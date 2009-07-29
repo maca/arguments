@@ -4,13 +4,12 @@ class Class
     
     methods.each do |meth|
       names   = Arguments.names self, meth
-      next if names.empty? || names.inject(0){ |sum, pair| sum + pair.size } == names.size
+      next if names.empty? || names.any?{|name| name[0] == :"*args"}
       
       assigns = []
       names.each_with_index do |name, index|
         unless name.size == 1
           # optionals
-          assigns << "#{ name.first } = opts.key?(:#{ name.first }) ? opts[:#{ name.first }] : args.fetch(#{ index },#{ name.last })"
           assigns << <<-RUBY_EVAL
             #{ name.first } =
             if opts.key?(:#{ name.first })
@@ -47,15 +46,3 @@ class Class
   alias :named_args     :named_arguments_for
   
 end
-
-=begin
-# for some reason in 1.9 module doesn't take methods from class...at least not like 1.8 did
-# so we have to mix them into both 
-class Class
- include NamedArgs
-end
-
-class Module
- include NamedArgs
-end
-=end

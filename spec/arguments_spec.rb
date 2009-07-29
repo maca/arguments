@@ -77,11 +77,23 @@ describe Arguments do
   it "should not patch methods that use splatter op" do
     Klass.send( :named_arguments_for, :splatted )
     @instance.splatted(1, :args => 1).should == [1, {:args => 1}]
+
+    Klass.send( :named_arguments_for, :splatted2 )
+    @instance.splatted2(:a => 1, :"*args" => 3).should == []
+
+    Klass.send( :named_arguments_for, :splatted3 )
+    @instance.splatted3(:a => 1, :"*args" => 3).should == []
+    @instance.splatted3(1, :b => 2, :args => 1).should == [{:b => 2, :args => 1}]
+
+    Klass.send( :named_arguments_for, :splatted4 )
+    @instance.splatted4(1, :b => 2, :args => 1).should == []
+
   end
   
-  it "should not patch methods with no optionals" do
+  it "should patch methods with no optionals" do
     Klass.send( :named_arguments_for, :no_opts )
-    @instance.no_opts(1,2, :a => 1).should == {:a => 1}
+    lambda { @instance.no_opts(1,2, :a => 1)}.should raise_error(ArgumentError)
+    @instance.no_opts(1,2, :c => 1).should == 1
   end
   
   it "should patch all methods" do
@@ -98,10 +110,6 @@ describe Arguments do
   
   it "should work with modules too" do
     lambda { module TestMod; def go(a); end; named_arguments_for :go; end }
-  end
-
-  it "should raise if you try to call it on a c (binary) method" do
-    lambda  { class String; named_arguments_for(:strip); end }.should raise_error( BinaryMethodError )
   end
 
   it "should benchmark with hack" do
