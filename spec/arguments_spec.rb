@@ -6,6 +6,7 @@ describe Arguments do
   before do
     Object.send(:remove_const, 'Klass') rescue nil
     load "#{ File.dirname __FILE__ }/klass.rb"
+    load "#{ File.dirname __FILE__ }/module.rb"
     @instance = Klass.new
   end
   
@@ -109,7 +110,8 @@ describe Arguments do
   end
   
   it "should work with modules too" do
-    lambda { module TestMod; def go(a); end; named_arguments_for :go; end }
+    TestMod.send( :named_arguments_for, :go)
+    IncludesTestMod.new.go(:a => 1).should == 1
   end
 
   it "should benchmark with hack" do

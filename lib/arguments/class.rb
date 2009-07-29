@@ -1,4 +1,4 @@
-class Class
+module NamedArgs
   def named_arguments_for *methods
     methods = instance_methods - Object.methods if methods.empty?
     
@@ -46,3 +46,6 @@ class Class
   alias :named_args     :named_arguments_for
   
 end
+
+class Class; include NamedArgs; end
+class Module; include NamedArgs; end
