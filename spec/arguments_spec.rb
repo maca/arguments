@@ -68,6 +68,21 @@ describe Arguments do
     Klass.asr(0, 1, 2, :curve => 3).should == [0,1,2,3]
   end
   
+  it "should work with class methods" do
+    Klass.send( :named_arguments_for, :"Klass.class_method")
+    Klass.class_method(:a => 1).should == 1
+  end
+
+  it "should work with class methods called like :self.method_name" do
+    Klass.send( :named_arguments_for, :"self.class_method2")
+    Klass.class_method2(:a => 1).should == 1
+  end
+
+  it "should work with class methods passed in by string instead of symboL" do
+    Klass.send( :named_arguments_for, "self.class_method3")
+    Klass.class_method3(:a => 1).should == 1
+  end
+
   it "should not patch methods that accept no args" do
     # Arguments.should_not_receive(:names)
     Klass.send( :named_arguments_for, :no_args )

@@ -1,7 +1,7 @@
 
 module Arguments
   def self.names klass, method
-    source, line = klass.instance_method( method ).source_location
+    source, line = klass.instance_method( method ).source_location rescue klass.method( method ).source_location
     return [] unless source and line
     str = IO.readlines(source)[ line - 1 ]
     return [] if str.match(/\*\w+/)

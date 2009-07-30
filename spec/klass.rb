@@ -48,6 +48,18 @@ class Klass
       [attackTime, sustainLevel, releaseTime, curve]
     end
     named_arguments_for :asr
+
+    def class_method(a)
+      a
+    end
+
+    def class_method2(a)
+      a
+    end
+    
+    def class_method3(a)
+      a
+    end
   end
   
   def == other

@@ -3,7 +3,16 @@ module NamedArgs
     methods = instance_methods - Object.methods if methods.empty?
     
     methods.each do |meth|
-      names   = Arguments.names self, meth
+      if(meth.to_s.include?('.'))
+         # they may have passed in a parameter like :klass.method for a class method
+         klass, meth = meth.to_s.split('.')
+         klass = eval(klass) # from "Klass" to Klass
+         klass = (class << klass; self; end)
+         names = Arguments.names klass, meth
+      else
+        names  = Arguments.names self, meth
+        klass = self
+      end
       next if names.empty? || names.any?{|name| name[0] == :"*args"}
       
       assigns = []
@@ -30,7 +39,7 @@ module NamedArgs
         end
       end
 
-      self.module_eval <<-RUBY_EVAL, __FILE__, __LINE__
+      klass.module_eval <<-RUBY_EVAL, __FILE__, __LINE__
         def __new_#{ meth } *args, &block
           opts = args.last.kind_of?( Hash ) ? args.pop : {}
           #{ assigns.join("\n") }
@@ -42,6 +51,7 @@ module NamedArgs
       RUBY_EVAL
     end
   end
+
   alias :named_args_for :named_arguments_for
   alias :named_args     :named_arguments_for
   
