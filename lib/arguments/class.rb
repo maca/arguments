@@ -52,7 +52,7 @@ module NamedArgs
       RUBY_EVAL
 
       begin
-        klass.module_eval new_code, __FILE__, line_loc + 1
+        klass.module_eval new_code, __FILE__ + '.approximately', line_loc + 1
       rescue SyntaxError => e
           puts "warning--unable to wrap method #{ meth } -- possibly a syntax exception or it's not all on one line in 1.9 -- #{new_code}"
           throw e
