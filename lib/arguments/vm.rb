@@ -5,6 +5,7 @@ module Arguments
     return [] unless source and line
     str = IO.readlines(source)[ line - 1 ]
     return [] if str.match(/\*\w+/)
+    throw 'poor comma' + str if str  =~ /,\W*&/
     str.match(/def\s*\w+\s*\(?\s*([^)\n]*)/)[1] #This could look better
       .scan(/(\w+)(?:\s*=\s*([^,]+))|(\w+)/).map{ |e| e.compact  }
   end

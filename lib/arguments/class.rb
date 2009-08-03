@@ -51,6 +51,8 @@ module NamedArgs
         alias #{ meth } __new_#{ meth }
       RUBY_EVAL
 
+      puts "wrapping #{ meth } with this code #{new_code}" if $VERBOSE
+
       begin
         klass.module_eval new_code, __FILE__ + '.approximately', line_loc + 1
       rescue SyntaxError => e
