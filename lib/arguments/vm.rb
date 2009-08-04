@@ -7,6 +7,6 @@ module Arguments
     return [] if str.match(/\*\w+/)
     throw 'poor comma' + str if str  =~ /,\W*&/
     str.match(/def\s*\w+\s*\(?\s*([^)\n]*)/)[1] #This could look better
-      .scan(/(\w+)(?:\s*=\s*([^,]+))|(\w+)/).map{ |e| e.compact  }
+      .scan(/(\w+)(?:\s*=\s*([^,]+))|(\w+)/).map{ |e| e.compact  }.collect{|e2| e2[1].gsub!(/\W*\&.*/, '') if e2[1]; e2}
   end
 end
