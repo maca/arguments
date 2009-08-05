@@ -9,8 +9,9 @@ $hoe = Hoe.new('arguments', Arguments::VERSION) do |p|
   # p.rubyforge_name       = p.name # TODO this is default value
 
   p.extra_deps = [
-    ['ParseTree','>= 3.0.3'],
-    ['ruby2ruby', '= 1.1.9']
+    ['ruby_parser', '>= 2.0.2'],
+    ['ParseTree',   '>= 3.0.3'],
+    ['ruby2ruby',    '= 1.1.9']
   ]
 
   p.extra_dev_deps = [

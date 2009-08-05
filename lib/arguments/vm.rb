@@ -1,12 +1,20 @@
+gem 'ruby_parser', '>= 2.0.2'
+require 'ruby_parser'
 
 module Arguments
-  def self.names klass, method
-    source, line = klass.instance_method( method ).source_location rescue klass.method( method ).source_location
-    return [] unless source and line
-    str = IO.readlines(source)[ line - 1 ]
-    return [] if str.match(/\*\w+/)
-    throw 'poor comma' + str if str  =~ /,\W*&/
-    str.match(/def\s*\w+\s*\(?\s*([^)\n]*)/)[1] #This could look better
-      .scan(/(\w+)(?:\s*=\s*([^,]+))|(\w+)/).map{ |e| e.compact  }.collect{|e2| e2[1].gsub!(/\W*\&.*/, '') if e2[1]; e2}
+  class PermissiveRubyParser < RubyParser
+    def on_error t, val, vstack
+      @rescue = vstack.first
+    end
+
+    def parse str, file = "(string)"
+      super || @rescue
+    end
+  end
+  
+  def self.ast_for_method klass, method
+    source, line = klass.instance_method(method).source_location
+    str = IO.readlines( source )[ (line-1)..-1 ].join
+    PermissiveRubyParser.new.parse( str ).assoc( :defn )
   end
 end
