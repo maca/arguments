@@ -1,10 +1,17 @@
 History.txt
 Manifest.txt
+PostInstall.txt
 README.rdoc
 Rakefile
 lib/arguments.rb
 lib/arguments/class.rb
 lib/arguments/mri.rb
 lib/arguments/vm.rb
+script/console
+script/destroy
+script/generate
 spec/arguments_spec.rb
 spec/klass.rb
+spec/module.rb
+test/test_arguments.rb
+test/test_helper.rb
