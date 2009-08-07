@@ -10,20 +10,24 @@ Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will wor
 == SYNOPSIS:
 
     require 'arguments'
-
+    
     class Example
       def meth(a = :a, b = :b, c = :c)
         [a,b,c]
       end
-
-      named_args_for :meth
-
+       
       class << self
         def class_method(a = :a, b = :b, c = :c)
           [a,b,c]
         end
+        
+        def other_class_method(a = :a, b = :b, c = :c)
+          [a,b,c]
+        end        
         named_args_for :class_method
       end
+      
+      named_args_for :meth, :'self.other_class_method'
     end
     
     nu = Example.new
@@ -32,39 +36,57 @@ Arguments has been tested with Ruby 1.8.6 and ruby 1.9.1 and eventually will wor
     nu.meth(:b => nil, :a => 'something') #=> ['something', nil, :c]
     
     Example.class_method(:b => nil, :a => 'something') #=> ['something', nil, :c]
+    Example.other_class_method(:b => nil, :a => 'something') #=> ['something', nil, :c]
+    
     
 
 
 * #named_arguments_for is aliased as #named_args_for and #named_args
 * Calling #named_args_for without arguments patches all previously declared methods in scope
+* Last Hash argument is used to assign argument values unless passing all accepted arguments:
+
+  nu.meth(1, :c => 'string') #=> [1, :b, 'string']
+  nu.meth(1, 2, :a => 'string')  #=> [1, 2, {:a => 'string'}]
+
 * Any number of method names (Symbol or String) corresponding to existing methods can be passed
 * Methods with no optionals won't be patched (will behave as usual with no named params)
 * Same for methods with splatted arguments and for native methods (not declared in Ruby)
 * Keyword argument take precedence over argument order:
       
       nu.meth(10, :a => -10) #=> [-10, :b, :c]
+      
+* pasing a key not corresponding to an argument name will raise ArgumentError:
 
+      nu.meth(10, :four => -10) #=> ArgumentError: `four` is not an argument name.
 
 == LIMITATIONS
 
 * Performance penalty occurs only in 1.8.6 due to ParseTree use and only while calling Class#named_args\_for, penalty while calling the actuall method is neglectable.
 * With Ruby 1.8.6 it can patch methods declared with eval, with 1.9.1 only methods declared in a source file.
-* If last argument is a Hash is taken as an options Hash and not assigned to the argument varible, if you want to pass a has as a last argument use keywords.
-
-== TODO
-
-Don't use last argument (Hash) as options if passed total number of args.
 
 == REQUIREMENTS:
 
-Ruby 1.8.6:
-
-- ParseTree >= 3.0.3
 - Ruby2Ruby 1.1.9
+
+Ruby 1.8.6:
+- ParseTree >= 3.0.3
+
+Ruby 1.9.1
+- RubyParser >= 2.0.2
 
 == INSTALL:
 
     sudo gem install maca-arguments –source http://gems.github.com
+
+== LATEST CHANGES (0.6)
+
+* Fixed a bug where converting a block to proc argument using ampersand would blow method call
+* Passing a keyword not corresponding to an argument name raises an error
+* Using RubyParser in Ruby 1.9.1 instead of Regexp to extract argument names and default values
+* Method definition that uses splat operator is now ignored
+* Last Hash argument is not used for assigning argument values if total number of arguments has been passed
+* named_arguments_for can be called passing a Class method name eg: named_args_for :instance_method, 'self.class_method'
+
 
 == LICENSE:
 

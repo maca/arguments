@@ -15,6 +15,7 @@ module Arguments
   def self.ast_for_method klass, method
     source, line = klass.instance_method(method).source_location
     str = IO.readlines( source )[ (line-1)..-1 ].join
-    PermissiveRubyParser.new.parse( str ).assoc( :defn )
+    ast = PermissiveRubyParser.new.parse( str )
+    ast.assoc( :defn ) or ast
   end
 end

@@ -7,7 +7,7 @@ require 'arguments/class'
 RUBY_VERSION.to_f >= 1.9 ? require( 'arguments/vm' ) : require( 'arguments/mri' )
 
 module Arguments
-  VERSION = '0.5.1'
+  VERSION = '0.6'
   
   def self.names klass, method
     args = ast_for_method(klass, method).assoc(:args)

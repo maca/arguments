@@ -10,4 +10,13 @@
 
 == 0.4.3 2009-07-07
 
-* Fixed a serious Bug where default values could not be overriden by passing arguments without keyword
+* Fixed a serious bug where default values could not be overriden by passing arguments without keyword
+
+== 0.6 2009-08-06
+
+* Fixed a bug where converting a block to proc argument using ampersand would blow method call
+* Passing a keyword not corresponding to an argument name raises an error
+* Using RubyParser in Ruby 1.9.1 instead of Regexp to extract argument names and default values
+* Method definition that uses splat operator is now ignored
+* Last Hash argument is not used for assigning argument values if total number of arguments has been passed
+* named_arguments_for can be called passing a Class method name eg: named_args_for :instance_method, 'self.class_method'

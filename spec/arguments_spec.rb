@@ -1,20 +1,15 @@
 require "#{ dir = File.dirname __FILE__ }/../lib/arguments"
 require 'benchmark'
 
-# TODO: Refactor specs for clarity
+# TODO: Refactor specs for clarity and better coverage
 describe Arguments do
 
   before do
     Object.send(:remove_const, 'Klass') rescue nil
     load "#{ dir }/klass.rb"
-    # load "#{ dir }/module.rb"
     @instance = Klass.new
   end
-  
-  it "should respond to named_arguments" do
-    Klass.send( :named_arguments_for, :three )
-  end
-  
+
   it "should not respond to named_arguments" do
     lambda { Klass.new.send( :named_arguments_for ) }.should raise_error( NoMethodError )
   end
@@ -30,7 +25,13 @@ describe Arguments do
   
   it "should raise ArgumentError if not passing required params" do
     Klass.send( :named_arguments_for, :two )
-    lambda { @instance.two( :three => 3 ) }.should raise_error(ArgumentError)
+    error =
+    begin 
+      @instance.two( :three => 3 )
+    rescue ArgumentError => e
+      e
+    end
+    error.to_s.should == "passing `one` is required"
   end
   
   it "should override passed value with hash" do
@@ -48,61 +49,84 @@ describe Arguments do
     @instance.with_block( 1, :three => nil, :two => 'something' ){ :block }.should == [1, 'something', nil, :block]
   end
   
+  it "should patch methods that accept proc as argument" do
+    Klass.send( :named_arguments_for, :with_block2 )
+    @instance.with_block2(1, :three => nil, :two => 'something'){ :block }.should == [1, 'something', nil, :block]
+  end
+  
   it "should override defaults on standard passing" do
     Klass.send( :named_arguments_for, :asr )
-    @instance.asr(0, 1, 2, :curve => 3).should == [0, 1, 2, 3]
+    @instance.asr(0, 1, :curve => 3).should == [0, 1, 1, 3]
   end
 
   it "should work with class methods" do
-    Klass.asr(0, 1, 2, :curve => 3).should == [0, 1, 2, 3]
+    (class << Klass; self; end).send( :named_arguments_for, :k_method )
+    Klass.k_method(:d => :d).should == [1, 2, 3, :d]
   end
   
-  # it "should work with class methods" do
-  #    Klass.send( :named_arguments_for, "self.class_method")
-  #    Klass.class_method(:a => 1).should == 1
-  #  end
-  # 
-  #  it "should work with class methods called like :self.method_name" do
-  #    Klass.send( :named_arguments_for, :"self.class_method2")
-  #    Klass.class_method2(:a => 1).should == 1
-  #  end
-  # 
-  #  it "should work with class methods passed in by string instead of symboL" do
-  #    Klass.send( :named_arguments_for, "self.class_method3")
-  #    Klass.class_method3(:a => 1).should == 1
-  #  end
-
-  # it "should not patch methods that accept no args" do
-  #   # Arguments.should_not_receive(:names)
-  #   Klass.send( :named_arguments_for, :no_args )
-  #   lambda { @instance.no_args(1) }.should raise_error(ArgumentError)
-  #   @instance.no_args.should be_nil
-  # end
+  it "should override defaults on standard passing" do
+    Klass.send( :named_arguments_for, 'self.k_method' )
+    Klass.k_method(:d => :d).should == [1, 2, 3, :d]
+  end
+  
+  it "should not use options if all arguments are passed" do
+    Klass.send( :named_arguments_for, :two )
+    @instance.two( 1, 2, :three => nil ).should == [1, 2, {:three => nil}]
+  end
+  
+  it "should raise ArgumentError if passing a not recoginized keyword" do
+    Klass.send( :named_arguments_for, :two )
+    error =
+    begin 
+      @instance.two( 1, :four => nil )
+    rescue ArgumentError => e
+      e
+    end
+    error.to_s.should == "`four` is not a recognized argument keyword"
+  end
+  
+  it "should raise ArgumentError if passing recoginized keywords" do
+    Klass.send( :named_arguments_for, :two )
+    error =
+    begin 
+      @instance.two( 1, :four => nil, :five => nil  )
+    rescue ArgumentError => e
+      e
+    end
+    error.to_s.should == "`four, five` are not recognized argument keywords"
+  end
+  
+  it "should not patch methods that accept no args" do
+    Klass.send( :named_arguments_for, :no_args )
+    lambda { @instance.no_args(1) }.should raise_error(ArgumentError)
+    @instance.no_args.should be_nil
+  end
   
   it "should not patch methods that use splatter op" do
     Klass.send( :named_arguments_for, :splatted )
     @instance.splatted(1, :args => 1).should == [1, {:args => 1}]
   
     Klass.send( :named_arguments_for, :splatted2 )
-    @instance.splatted2(:a => 1, :"*args" => 3).should == []
+    @instance.splatted2(:a => 1, :"*rest" => 3).should == [{:a => 1, :'*rest' => 3}, []]
   
     Klass.send( :named_arguments_for, :splatted3 )
-    @instance.splatted3(:a => 1, :"*args" => 3).should == []
-    @instance.splatted3(1, :b => 2, :args => 1).should == [{:b => 2, :args => 1}]
+    @instance.splatted3(:a => 1, :"*args" => 3).should == [{:a => 1, :"*args" => 3}, []]
+    @instance.splatted3(1, :b => 2, :args => 1).should == [1, [{:b => 2, :args => 1}]]
   
     Klass.send( :named_arguments_for, :splatted4 )
-    @instance.splatted4(1, :b => 2, :args => 1).should == []
+    @instance.splatted4(1, :b => 2, :args => 1).should == [1, {:b => 2, :args => 1}, []]
   end
   
   it "should not patch methods with no optionals" do
     Klass.send( :named_arguments_for, :no_opts )
-    @instance.no_opts(1, 2, :c => 1).should == {:c => 1}
+    @instance.method(:no_opts).arity.should == 3
   end
   
-  # it "should patch all methods" do
-  #   Klass.send( :named_args )
-  # end
-  # 
+  it "should patch all methods" do
+    Klass.send( :named_args )
+    @instance.two(1, :three => 3).should == [1, 2, 3]
+  end
+  
   it "should benchmark without hack" do
     puts Benchmark.measure {
       1_000.times do
