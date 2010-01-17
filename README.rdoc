@@ -1,6 +1,6 @@
 = arguments
 
-Keyword arguments support now!
+http://github.com/maca/arguments
 
 == DESCRIPTION:
 
@@ -76,7 +76,7 @@ Ruby 1.9.1
 
 == INSTALL:
 
-    sudo gem install maca-arguments –source http://gems.github.com
+    sudo gem install arguments --source http://gemcutter.org
 
 == LATEST CHANGES (0.6)
 

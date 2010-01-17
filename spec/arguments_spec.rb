@@ -1,5 +1,7 @@
+require 'rubygems'
 require "#{ dir = File.dirname __FILE__ }/../lib/arguments"
 require 'benchmark'
+
 
 # TODO: Refactor specs for clarity and better coverage
 describe Arguments do
