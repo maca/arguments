@@ -2,6 +2,13 @@
 
 http://github.com/maca/arguments
 
+This gem is long dead and buried, after all there is nothing wrong to passing an options hash as people have been
+doing for ages. It was allways an stubborn big hack, now with Ruby 1.9+ all those amazing possibilities of introspection 
+are gonne. Oh man, it was fun playing with the AST of live objects!! But now we are safer from this kind of voodoo. 
+Off course I could keep on the stubborness, I even foolishly considered and made an attempt to parse Iseq's to 
+reconstruct the AST, but it would allways be a hack.
+This gem is dead, but it will live forever in the repository, as a friend once told me.
+
 == DESCRIPTION:
 
 You don't have to wait until Ruby 2.0 to get (named|keyword) arguments support.
